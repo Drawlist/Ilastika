@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Калькулятор</title>
+  <title>Калькулятор с меню</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,10 +13,28 @@
       background: #f9f9f9;
       border-radius: 8px;
       box-shadow: 0 0 10px #ccc;
+      text-align: center;
     }
     h1 {
-      text-align: center;
       margin-bottom: 20px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 1.2em;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #calculator {
+      display: none;
+      margin-top: 20px;
+      text-align: left;
     }
     input[type="text"] {
       width: 100%;
@@ -30,7 +48,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
     }
-    button {
+    .buttons button {
       padding: 15px;
       font-size: 1.2em;
       cursor: pointer;
@@ -40,55 +58,66 @@
       color: white;
       transition: background-color 0.2s;
     }
-    button:hover {
+    .buttons button:hover {
       background-color: #0056b3;
     }
-    button.operator {
+    .buttons button.operator {
       background-color: #28a745;
     }
-    button.operator:hover {
+    .buttons button.operator:hover {
       background-color: #1e7e34;
     }
-    button.clear {
+    .buttons button.clear {
       background-color: #dc3545;
     }
-    button.clear:hover {
+    .buttons button.clear:hover {
       background-color: #a71d2a;
     }
   </style>
 </head>
 <body>
 
-  <h1>Калькулятор</h1>
+  <h1>Добро пожаловать!</h1>
 
-  <input type="text" id="display" readonly />
+  <button id="startBtn">Начать</button>
 
-  <div class="buttons">
-    <button onclick="appendNumber('7')">7</button>
-    <button onclick="appendNumber('8')">8</button>
-    <button onclick="appendNumber('9')">9</button>
-    <button class="operator" onclick="appendOperator('/')">÷</button>
+  <div id="calculator">
+    <input type="text" id="display" readonly />
 
-    <button onclick="appendNumber('4')">4</button>
-    <button onclick="appendNumber('5')">5</button>
-    <button onclick="appendNumber('6')">6</button>
-    <button class="operator" onclick="appendOperator('*')">×</button>
+    <div class="buttons">
+      <button onclick="appendNumber('7')">7</button>
+      <button onclick="appendNumber('8')">8</button>
+      <button onclick="appendNumber('9')">9</button>
+      <button class="operator" onclick="appendOperator('/')">÷</button>
 
-    <button onclick="appendNumber('1')">1</button>
-    <button onclick="appendNumber('2')">2</button>
-    <button onclick="appendNumber('3')">3</button>
-    <button class="operator" onclick="appendOperator('-')">−</button>
+      <button onclick="appendNumber('4')">4</button>
+      <button onclick="appendNumber('5')">5</button>
+      <button onclick="appendNumber('6')">6</button>
+      <button class="operator" onclick="appendOperator('*')">×</button>
 
-    <button onclick="appendNumber('0')">0</button>
-    <button onclick="appendNumber('.')">.</button>
-    <button class="clear" onclick="clearDisplay()">C</button>
-    <button class="operator" onclick="appendOperator('+')">+</button>
+      <button onclick="appendNumber('1')">1</button>
+      <button onclick="appendNumber('2')">2</button>
+      <button onclick="appendNumber('3')">3</button>
+      <button class="operator" onclick="appendOperator('-')">−</button>
 
-    <button style="grid-column: span 4;" onclick="calculate()">=</button>
+      <button onclick="appendNumber('0')">0</button>
+      <button onclick="appendNumber('.')">.</button>
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button class="operator" onclick="appendOperator('+')">+</button>
+
+      <button style="grid-column: span 4;" onclick="calculate()">=</button>
+    </div>
   </div>
 
 <script>
+  const startBtn = document.getElementById('startBtn');
+  const calculator = document.getElementById('calculator');
   const display = document.getElementById('display');
+
+  startBtn.addEventListener('click', () => {
+    startBtn.style.display = 'none';  // скрываем кнопку
+    calculator.style.display = 'block'; // показываем калькулятор
+  });
 
   function appendNumber(num) {
     if (display.value === '0' && num !== '.') {
@@ -100,7 +129,6 @@
 
   function appendOperator(op) {
     if (display.value === '') return;
-    // Не даем вставить два оператора подряд
     const lastChar = display.value.slice(-1);
     if ('+-*/'.includes(lastChar)) {
       display.value = display.value.slice(0, -1) + op;
@@ -115,7 +143,6 @@
 
   function calculate() {
     try {
-      // eslint-disable-next-line no-eval
       const result = eval(display.value);
       display.value = result;
     } catch (e) {
