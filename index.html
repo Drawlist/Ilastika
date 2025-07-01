@@ -31,24 +31,42 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.1);
       max-width: 400px;
       width: 100%;
-      min-height: 300px;
+      min-height: 350px;
 
-      /* Центрируем контент вертикально */
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
 
-      /* Для анимации */
       opacity: 1;
       transition: opacity 0.5s ease;
     }
 
     h1 {
-      margin-bottom: 30px;
+      margin-bottom: 10px;
       font-weight: 700;
       font-size: 2.2em;
       user-select: none;
+    }
+
+    /* Серая линия с текстом "Решай" */
+    .line-with-text {
+      width: 100%;
+      border-top: 2px solid #bbb;
+      line-height: 0;
+      margin: 20px 0 30px 0;
+      position: relative;
+      user-select: none;
+    }
+    .line-with-text span {
+      position: relative;
+      top: -0.8em;
+      background: white;
+      padding: 0 15px;
+      font-size: 60px;
+      color: #777;
+      font-weight: 700;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     button {
@@ -79,7 +97,7 @@
 
     #calculator.show {
       opacity: 1;
-      max-height: 1000px; /* большой max-height для плавного открытия */
+      max-height: 1000px;
     }
 
     input[type="text"] {
@@ -142,6 +160,9 @@
   <div id="container">
     <h1 id="header">Добро пожаловать!</h1>
 
+    <!-- Линия с текстом "Решай" -->
+    <div class="line-with-text"><span>Решай</span></div>
+
     <button id="startBtn">Начать</button>
 
     <div id="calculator">
@@ -180,10 +201,7 @@
   const header = document.getElementById('header');
 
   startBtn.addEventListener('click', () => {
-    // Плавно скрываем кнопку
     startBtn.classList.add('hide');
-
-    // Через 500ms меняем заголовок и показываем калькулятор
     setTimeout(() => {
       header.textContent = 'Калькулятор';
       calculator.classList.add('show');
