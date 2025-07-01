@@ -2,11 +2,128 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>Мой сайт на GitHub Pages</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Калькулятор</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #ccc;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      width: 100%;
+      font-size: 1.2em;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    button {
+      padding: 15px;
+      font-size: 1.2em;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    button.operator {
+      background-color: #28a745;
+    }
+    button.operator:hover {
+      background-color: #1e7e34;
+    }
+    button.clear {
+      background-color: #dc3545;
+    }
+    button.clear:hover {
+      background-color: #a71d2a;
+    }
+  </style>
 </head>
 <body>
-  <h1>Привет, мир!</h1>
-  <p>Это мой первый сайт на github.io</p>
+
+  <h1>Калькулятор</h1>
+
+  <input type="text" id="display" readonly />
+
+  <div class="buttons">
+    <button onclick="appendNumber('7')">7</button>
+    <button onclick="appendNumber('8')">8</button>
+    <button onclick="appendNumber('9')">9</button>
+    <button class="operator" onclick="appendOperator('/')">÷</button>
+
+    <button onclick="appendNumber('4')">4</button>
+    <button onclick="appendNumber('5')">5</button>
+    <button onclick="appendNumber('6')">6</button>
+    <button class="operator" onclick="appendOperator('*')">×</button>
+
+    <button onclick="appendNumber('1')">1</button>
+    <button onclick="appendNumber('2')">2</button>
+    <button onclick="appendNumber('3')">3</button>
+    <button class="operator" onclick="appendOperator('-')">−</button>
+
+    <button onclick="appendNumber('0')">0</button>
+    <button onclick="appendNumber('.')">.</button>
+    <button class="clear" onclick="clearDisplay()">C</button>
+    <button class="operator" onclick="appendOperator('+')">+</button>
+
+    <button style="grid-column: span 4;" onclick="calculate()">=</button>
+  </div>
+
+<script>
+  const display = document.getElementById('display');
+
+  function appendNumber(num) {
+    if (display.value === '0' && num !== '.') {
+      display.value = num;
+    } else {
+      display.value += num;
+    }
+  }
+
+  function appendOperator(op) {
+    if (display.value === '') return;
+    // Не даем вставить два оператора подряд
+    const lastChar = display.value.slice(-1);
+    if ('+-*/'.includes(lastChar)) {
+      display.value = display.value.slice(0, -1) + op;
+    } else {
+      display.value += op;
+    }
+  }
+
+  function clearDisplay() {
+    display.value = '';
+  }
+
+  function calculate() {
+    try {
+      // eslint-disable-next-line no-eval
+      const result = eval(display.value);
+      display.value = result;
+    } catch (e) {
+      alert('Ошибка в выражении');
+      clearDisplay();
+    }
+  }
+</script>
+
 </body>
 </html>
-
