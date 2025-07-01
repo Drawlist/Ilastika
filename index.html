@@ -5,21 +5,54 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Калькулятор с меню</title>
   <style>
-    body {
+    /* Сброс и базовые стили */
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      margin: 0;
       font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 40px auto;
-      padding: 20px;
       background: #f9f9f9;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #ccc;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       text-align: center;
+      padding: 20px;
     }
+
+    #container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      min-height: 300px;
+
+      /* Центрируем контент вертикально */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      /* Для анимации */
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
     h1 {
-      margin-bottom: 20px;
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 2.2em;
+      user-select: none;
     }
+
     button {
-      padding: 15px 30px;
+      padding: 15px 40px;
       font-size: 1.2em;
       cursor: pointer;
       border: none;
@@ -27,85 +60,116 @@
       background-color: #007bff;
       color: white;
       transition: background-color 0.2s;
+      user-select: none;
     }
+
     button:hover {
       background-color: #0056b3;
     }
+
     #calculator {
-      display: none;
-      margin-top: 20px;
+      margin-top: 10px;
+      width: 100%;
       text-align: left;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.5s ease, max-height 0.5s ease;
     }
+
+    #calculator.show {
+      opacity: 1;
+      max-height: 1000px; /* большой max-height для плавного открытия */
+    }
+
     input[type="text"] {
       width: 100%;
-      font-size: 1.2em;
+      font-size: 1.4em;
       padding: 10px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
       box-sizing: border-box;
+      user-select: none;
     }
+
     .buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 10px;
+      user-select: none;
     }
+
     .buttons button {
       padding: 15px;
       font-size: 1.2em;
-      cursor: pointer;
-      border: none;
       border-radius: 5px;
       background-color: #007bff;
       color: white;
+      border: none;
       transition: background-color 0.2s;
     }
+
     .buttons button:hover {
       background-color: #0056b3;
     }
+
     .buttons button.operator {
       background-color: #28a745;
     }
+
     .buttons button.operator:hover {
       background-color: #1e7e34;
     }
+
     .buttons button.clear {
       background-color: #dc3545;
     }
+
     .buttons button.clear:hover {
       background-color: #a71d2a;
+    }
+
+    /* Скрываем кнопку с плавным исчезновением */
+    #startBtn.hide {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
     }
   </style>
 </head>
 <body>
+  <div id="container">
+    <h1 id="header">Добро пожаловать!</h1>
 
-  <h1 id="header">Добро пожаловать!</h1>
+    <button id="startBtn">Начать</button>
 
-  <button id="startBtn">Начать</button>
+    <div id="calculator">
+      <input type="text" id="display" readonly />
 
-  <div id="calculator">
-    <input type="text" id="display" readonly />
+      <div class="buttons">
+        <button onclick="appendNumber('7')">7</button>
+        <button onclick="appendNumber('8')">8</button>
+        <button onclick="appendNumber('9')">9</button>
+        <button class="operator" onclick="appendOperator('/')">÷</button>
 
-    <div class="buttons">
-      <button onclick="appendNumber('7')">7</button>
-      <button onclick="appendNumber('8')">8</button>
-      <button onclick="appendNumber('9')">9</button>
-      <button class="operator" onclick="appendOperator('/')">÷</button>
+        <button onclick="appendNumber('4')">4</button>
+        <button onclick="appendNumber('5')">5</button>
+        <button onclick="appendNumber('6')">6</button>
+        <button class="operator" onclick="appendOperator('*')">×</button>
 
-      <button onclick="appendNumber('4')">4</button>
-      <button onclick="appendNumber('5')">5</button>
-      <button onclick="appendNumber('6')">6</button>
-      <button class="operator" onclick="appendOperator('*')">×</button>
+        <button onclick="appendNumber('1')">1</button>
+        <button onclick="appendNumber('2')">2</button>
+        <button onclick="appendNumber('3')">3</button>
+        <button class="operator" onclick="appendOperator('-')">−</button>
 
-      <button onclick="appendNumber('1')">1</button>
-      <button onclick="appendNumber('2')">2</button>
-      <button onclick="appendNumber('3')">3</button>
-      <button class="operator" onclick="appendOperator('-')">−</button>
+        <button onclick="appendNumber('0')">0</button>
+        <button onclick="appendNumber('.')">.</button>
+        <button class="clear" onclick="clearDisplay()">C</button>
+        <button class="operator" onclick="appendOperator('+')">+</button>
 
-      <button onclick="appendNumber('0')">0</button>
-      <button onclick="appendNumber('.')">.</button>
-      <button class="clear" onclick="clearDisplay()">C</button>
-      <button class="operator" onclick="appendOperator('+')">+</button>
-
-      <button style="grid-column: span 4;" onclick="calculate()">=</button>
+        <button style="grid-column: span 4;" onclick="calculate()">=</button>
+      </div>
     </div>
   </div>
 
@@ -116,9 +180,15 @@
   const header = document.getElementById('header');
 
   startBtn.addEventListener('click', () => {
-    startBtn.style.display = 'none';      // скрываем кнопку
-    calculator.style.display = 'block';   // показываем калькулятор
-    header.textContent = 'Калькулятор';   // меняем заголовок
+    // Плавно скрываем кнопку
+    startBtn.classList.add('hide');
+
+    // Через 500ms меняем заголовок и показываем калькулятор
+    setTimeout(() => {
+      header.textContent = 'Калькулятор';
+      calculator.classList.add('show');
+      startBtn.style.display = 'none';
+    }, 500);
   });
 
   function appendNumber(num) {
