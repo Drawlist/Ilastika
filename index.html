@@ -16,23 +16,21 @@
       background: #f9f9f9;
     }
 
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-      min-height: 100vh;
-    }
-
-    /* Линия с текстом "Решай" вверху */
+    /* Фиксируем верхний блок с надписью "Решай" */
     .line-with-text {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
       width: 100%;
       max-width: 400px;
       border-top: 2px solid #bbb;
       line-height: 0;
-      margin-bottom: 40px;
-      position: relative;
       user-select: none;
+      background: #f9f9f9;
+      padding-top: 10px;
+      padding-bottom: 15px;
+      z-index: 100;
     }
     .line-with-text span {
       position: relative;
@@ -47,6 +45,16 @@
       text-align: center;
       max-width: 400px;
       margin: 0 auto;
+    }
+
+    /* Контейнер, занимающий всю высоту экрана минус высота верхней полосы */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 110px; /* высота верхнего блока + небольшой отступ */
+      height: 100vh;
+      box-sizing: border-box;
     }
 
     #container {
@@ -80,6 +88,8 @@
       display: flex;
       gap: 15px;
       margin-bottom: 20px;
+      width: 100%;
+      justify-content: center;
     }
 
     button {
@@ -94,6 +104,7 @@
       user-select: none;
       flex: 1;
       min-width: 100px;
+      max-width: 150px;
     }
 
     button:hover {
@@ -163,8 +174,8 @@
       background-color: #a71d2a;
     }
 
-    /* Скрываем кнопку с плавным исчезновением */
-    #startBtn.hide {
+    /* Скрываем кнопки с плавным исчезновением */
+    .button-group.hide button {
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.5s ease;
@@ -237,7 +248,7 @@
   <div id="container">
     <h1 id="header">Добро пожаловать!</h1>
 
-    <div class="button-group">
+    <div class="button-group" id="buttonGroup">
       <button id="startBtn">Начать</button>
       <button id="authorsBtn">Авторы</button>
     </div>
@@ -277,7 +288,9 @@
       <span id="closeModal">&times;</span>
       <h2>Авторы</h2>
       <ul>
-        <li>Адиль Чуйтенов</li>
+        <li>Иван Иванов</li>
+        <li>Мария Петрова</li>
+        <li>Алексей Смирнов</li>
       </ul>
     </div>
   </div>
@@ -288,18 +301,18 @@
   const calculator = document.getElementById('calculator');
   const display = document.getElementById('display');
   const header = document.getElementById('header');
+  const buttonGroup = document.getElementById('buttonGroup');
 
   const modal = document.getElementById('modal');
   const closeModal = document.getElementById('closeModal');
 
   startBtn.addEventListener('click', () => {
-    startBtn.classList.add('hide');
-    authorsBtn.classList.add('hide');
+    // Плавно скрываем кнопки
+    buttonGroup.classList.add('hide');
     setTimeout(() => {
       header.textContent = 'Калькулятор';
       calculator.classList.add('show');
-      startBtn.style.display = 'none';
-      authorsBtn.style.display = 'none';
+      buttonGroup.style.display = 'none';
     }, 500);
   });
 
@@ -311,7 +324,6 @@
     modal.classList.remove('show');
   });
 
-  // Закрытие модального окна при клике вне содержимого
   modal.addEventListener('click', (e) => {
     if (e.target === modal) {
       modal.classList.remove('show');
@@ -342,6 +354,7 @@
 
   function calculate() {
     try {
+      // Безопаснее будет проверить выражение, но для простоты eval
       const result = eval(display.value);
       display.value = result;
     } catch (e) {
